@@ -69,7 +69,7 @@ const UserFormEdit = () => {
             id="name"
             label="Name*"
             variant="filled"
-            defaultValue={user?.name}
+            defaultValue={user.name}
             {...register("name", {
               required: true,
             })}
@@ -82,7 +82,7 @@ const UserFormEdit = () => {
             label="Email*"
             variant="filled"
             //   type={"email"}
-            defaultValue={user?.email}
+            defaultValue={user.email}
             {...register("email", { required: true })}
             error={errors.email && true}
             helperText={errors.email && "This field is required."}
@@ -92,7 +92,7 @@ const UserFormEdit = () => {
             id="username"
             label="Username"
             variant="filled"
-            defaultValue={user?.username}
+            defaultValue={user.username}
             {...register("username")}
           />
 
@@ -100,7 +100,7 @@ const UserFormEdit = () => {
             id="city"
             label="City"
             variant="filled"
-            defaultValue={user?.address?.city}
+            defaultValue={user.address?.city}
             {...register("address.city")}
           />
 

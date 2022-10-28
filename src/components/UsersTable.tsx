@@ -12,22 +12,24 @@ import {
   TablePagination,
   TableRow,
   Button,
+  Tooltip,
 } from "@mui/material";
-
-import TablePaginationActions from "components/TablePaginationActions";
-
-import { UserInterface } from "types/placeholderApiTypes";
+import { SortByAlpha } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import UsersTableRow from "./UsersTableRow";
+import TablePaginationActions from "components/TablePaginationActions";
+import { UserInterface } from "types/placeholderApiTypes";
 import { useUsersListQuery } from "services/placeholderApi";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "app/store";
+import { sortUsers } from "features/users/usersSlice";
 
 const UsersList = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(15);
   const { usersList } = useSelector((store: RootState) => store.users);
   const usersListQuery = useUsersListQuery({});
+  const dispatch = useDispatch();
 
   if (usersListQuery.isFetching)
     return (
@@ -71,7 +73,20 @@ const UsersList = () => {
           <TableHead>
             <TableRow>
               <TableCell>Id</TableCell>
-              <TableCell>Name</TableCell>
+              <TableCell>
+                <Box sx={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                  Name
+                  <Tooltip title="Disable | Name A-Z | Name Z-A">
+                    <SortByAlpha
+                      sx={{ cursor: "pointer" }}
+                      fontSize="small"
+                      onClick={() => {
+                        dispatch(sortUsers());
+                      }}
+                    />
+                  </Tooltip>
+                </Box>
+              </TableCell>
               <TableCell>Username</TableCell>
               <TableCell>City</TableCell>
               <TableCell>Email</TableCell>

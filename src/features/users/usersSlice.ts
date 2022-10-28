@@ -5,11 +5,13 @@ import { UserInterface } from "types/placeholderApiTypes";
 interface InitialStateInterface {
   usersList: UserInterface[];
   lastId: number;
+  sortMode: 0 | 1 | 2;
 }
 
 const initialState: InitialStateInterface = {
   usersList: [],
   lastId: 0,
+  sortMode: 0,
 };
 
 const usersSlice = createSlice({
@@ -23,7 +25,6 @@ const usersSlice = createSlice({
     },
     editUser: (state, { payload }) => {
       const { user } = payload;
-
       const userIndex = state.usersList.findIndex(
         (oldUser) => oldUser.id == user.id
       );
@@ -32,15 +33,37 @@ const usersSlice = createSlice({
     },
     deleteUser: (state, { payload }) => {
       const { userId } = payload;
-
       const filteredUsers = state.usersList.filter(
         (user) => user.id !== userId
       );
 
       state.usersList = filteredUsers;
     },
+    sortUsers: (state) => {
+      switch (state.sortMode) {
+        case 0:
+          state.sortMode = 1;
+          state.usersList = state.usersList.sort((a, b) => {
+            return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
+          });
+          break;
+        case 1:
+          state.sortMode = 2;
+          state.usersList = state.usersList.sort((a, b) => {
+            return a.name.toLowerCase() < b.name.toLowerCase() ? 1 : -1;
+          });
+          break;
+        case 2:
+          state.sortMode = 0;
+          state.usersList = state.usersList.sort((a, b) => {
+            return a.id > b.id ? 1 : -1;
+          });
+          break;
+      }
+    },
     updateLastId: (state, { payload }) => {
       const { newLastId } = payload;
+
       state.lastId = newLastId;
     },
   },
@@ -55,7 +78,7 @@ const usersSlice = createSlice({
   },
 });
 
-export const { addUser, editUser, deleteUser, updateLastId } =
+export const { addUser, editUser, deleteUser, sortUsers, updateLastId } =
   usersSlice.actions;
 
 export default usersSlice.reducer;
