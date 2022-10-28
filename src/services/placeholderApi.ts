@@ -27,6 +27,12 @@ export const placeholderApi = createApi({
         body: data,
       }),
     }),
+    removeUser: builder.mutation({
+      query: ({ id }) => ({
+        url: `data/${id}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
@@ -35,4 +41,5 @@ export const {
   useUsersListQuery,
   useUpdateUserMutation,
   useCreateUserMutation,
+  useRemoveUserMutation,
 } = placeholderApi;

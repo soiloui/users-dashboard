@@ -1,14 +1,17 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { UserInterface } from "types/placeholderApiTypes";
 import { useForm } from "react-hook-form";
-import {
-  useUsersListQuery,
-  useCreateUserMutation,
-} from "services/placeholderApi";
+import { useCreateUserMutation } from "services/placeholderApi";
+import { useDispatch, useSelector } from "react-redux";
+import { addUser, updateLastId } from "features/users/usersSlice";
+import { RootState } from "app/store";
+import { Link, useNavigate } from "react-router-dom";
 
 const UserFormCreate = () => {
-  const usersListQuery = useUsersListQuery({});
   const [createUser] = useCreateUserMutation();
+  const disptach = useDispatch();
+  const navigate = useNavigate();
+  const { lastId } = useSelector((store: RootState) => store.users);
 
   const {
     register,
@@ -16,11 +19,17 @@ const UserFormCreate = () => {
     formState: { errors },
   } = useForm<UserInterface>();
 
-  function handleSubmitUserCreate(data: UserInterface) {
+  function handleSubmitUserCreate(user: UserInterface) {
+    const newLastId = lastId + 1;
+    disptach(updateLastId({ newLastId: newLastId }));
+    user.id = newLastId;
+
     createUser({
-      id: usersListQuery.data.length + 1,
-      data: data,
+      data: user,
     });
+
+    disptach(addUser({ user: user }));
+    navigate("/");
   }
 
   return (
@@ -37,8 +46,8 @@ const UserFormCreate = () => {
           gap: "10px",
           width: 400,
         }}
-        onSubmit={handleSubmit((data) => {
-          handleSubmitUserCreate(data);
+        onSubmit={handleSubmit((user) => {
+          handleSubmitUserCreate(user);
         })}
       >
         <TextField
@@ -79,6 +88,12 @@ const UserFormCreate = () => {
         <Button type="submit" variant="contained" color="primary">
           Submit
         </Button>
+
+        <Link to="/">
+          <Button variant="contained" color="error" sx={{ width: "100%" }}>
+            Cancel
+          </Button>
+        </Link>
       </Box>
     </>
   );

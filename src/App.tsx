@@ -4,6 +4,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Dashboard from "pages/Dashboard";
 import UserFormEdit from "pages/UserFormEdit";
 import UserFormCreate from "pages/UserFormCreate";
+import { useUsersListQuery } from "services/placeholderApi";
 
 const theme = createTheme({
   typography: {
@@ -22,6 +23,8 @@ const theme = createTheme({
 });
 
 const App = () => {
+  useUsersListQuery({});
+
   return (
     <>
       <ThemeProvider theme={theme}>

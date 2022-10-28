@@ -1,8 +1,8 @@
 export interface UserInterface {
-  id?: number;
-  name?: string;
+  id: number;
+  name: string;
   username?: string;
-  email?: string;
+  email: string;
   address?: AddressInterface;
   phone?: string;
   website?: string;
