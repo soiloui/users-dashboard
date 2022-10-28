@@ -1,29 +1,31 @@
 import { Box, Button, Skeleton, TextField, Typography } from "@mui/material";
 import { UserInterface } from "types/placeholderApiTypes";
-import { useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import {
-  useGetUserQuery,
-  useUpdateUserMutation,
-} from "services/placeholderApi";
-import { useState } from "react";
+import { useUpdateUserMutation } from "services/placeholderApi";
+import { useDispatch, useSelector } from "react-redux";
+import { editUser } from "features/users/usersSlice";
+import { RootState } from "app/store";
+
+interface Params {
+  userId: string;
+}
 
 const UserFormEdit = () => {
-  const [user, setUser] = useState<any>({});
-  const { userId } = useParams();
-
-  const getUserQuery = useGetUserQuery({ id: userId });
+  const { userId } = useParams<keyof Params>() as Params;
   const [updateUser] = useUpdateUserMutation();
+  const disptach = useDispatch();
+  const navigate = useNavigate();
+  const { usersList } = useSelector((store: RootState) => store.users);
+  const user = usersList.find((user) => {
+    return user.id === parseInt(userId);
+  });
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<UserInterface>();
-
-  if (getUserQuery.isSuccess && Object.keys(user).length === 0) {
-    setUser(getUserQuery.data);
-  }
 
   function handleSubmitUserEdit(data: UserInterface) {
     const upadtedUser = { ...user, ...data };
@@ -32,6 +34,9 @@ const UserFormEdit = () => {
       id: userId,
       data: upadtedUser,
     });
+
+    disptach(editUser({ user: upadtedUser }));
+    navigate("/");
   }
 
   return (
@@ -40,7 +45,7 @@ const UserFormEdit = () => {
         Edit user
       </Typography>
 
-      {getUserQuery.isFetching ? (
+      {!user ? (
         <Skeleton
           height={300}
           width={400}
@@ -102,6 +107,12 @@ const UserFormEdit = () => {
           <Button type="submit" variant="contained" color="primary">
             Submit
           </Button>
+
+          <Link to="/">
+            <Button variant="contained" color="error" sx={{ width: "100%" }}>
+              Cancel
+            </Button>
+          </Link>
         </Box>
       )}
     </>

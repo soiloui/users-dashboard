@@ -11,15 +11,21 @@ import { UserInterface } from "types/placeholderApiTypes";
 import { useTheme } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 import { Delete, Edit } from "@mui/icons-material";
+import { useDispatch } from "react-redux";
+import { deleteUser } from "features/users/usersSlice";
+import { useRemoveUserMutation } from "services/placeholderApi";
 
 interface Props {
   user: UserInterface;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const UsersTableRow = ({ user }: Props) => {
+const UsersTableRow = ({ user, setPage }: Props) => {
   const [openModal, setOpenModal] = React.useState(false);
+  const [removeUser] = useRemoveUserMutation();
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
+  const dispatch = useDispatch();
   const theme = useTheme();
 
   return (
@@ -96,7 +102,15 @@ const UsersTableRow = ({ user }: Props) => {
               >
                 Cancel
               </Button>
-              <Button variant="contained" color="error">
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => {
+                  setPage(0);
+                  dispatch(deleteUser({ userId: user.id }));
+                  removeUser({ id: user.id });
+                }}
+              >
                 Delete
               </Button>
             </Box>

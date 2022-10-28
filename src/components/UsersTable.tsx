@@ -16,15 +16,17 @@ import {
 
 import TablePaginationActions from "components/TablePaginationActions";
 
-import { useUsersListQuery } from "services/placeholderApi";
 import { UserInterface } from "types/placeholderApiTypes";
 import { Link } from "react-router-dom";
 import UsersTableRow from "./UsersTableRow";
+import { useUsersListQuery } from "services/placeholderApi";
+import { useSelector } from "react-redux";
+import { RootState } from "app/store";
 
 const UsersList = () => {
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
+  const [rowsPerPage, setRowsPerPage] = React.useState(15);
+  const { usersList } = useSelector((store: RootState) => store.users);
   const usersListQuery = useUsersListQuery({});
 
   if (usersListQuery.isFetching)
@@ -35,8 +37,7 @@ const UsersList = () => {
       </>
     );
 
-  const users = usersListQuery.data;
-  const rows: UserInterface[] = users;
+  const rows: UserInterface[] = usersList;
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
@@ -79,27 +80,37 @@ const UsersList = () => {
             </TableRow>
           </TableHead>
 
-          <TableBody>
-            {(rowsPerPage > 0
-              ? users.slice(
-                  page * rowsPerPage,
-                  page * rowsPerPage + rowsPerPage
-                )
-              : users
-            ).map((user: UserInterface) => (
-              <UsersTableRow key={user.id} user={user} />
-            ))}
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={6} />
+          {usersList.length > 0 ? (
+            <TableBody>
+              {(rowsPerPage > 0
+                ? usersList.slice(
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
+                : usersList
+              ).map((user: UserInterface) => (
+                <UsersTableRow key={user.id} user={user} setPage={setPage} />
+              ))}
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 53 * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+          ) : (
+            <TableBody>
+              <TableRow>
+                <TableCell style={{ width: "100%", maxWidth: "100%" }}>
+                  No users available
+                </TableCell>
               </TableRow>
-            )}
-          </TableBody>
+            </TableBody>
+          )}
 
           <TableFooter>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                rowsPerPageOptions={[5, 15, 25, { label: "All", value: -1 }]}
                 colSpan={7}
                 count={rows.length}
                 rowsPerPage={rowsPerPage}
