@@ -12,7 +12,7 @@ import { useTheme } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 import { Delete, Edit } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
-import { deleteUser } from "features/users/usersSlice";
+import { removeUser } from "features/users/usersSlice";
 import { useRemoveUserMutation } from "services/placeholderApi";
 
 interface Props {
@@ -22,7 +22,7 @@ interface Props {
 
 const UsersTableRow = ({ user, setPage }: Props) => {
   const [openModal, setOpenModal] = React.useState(false);
-  const [removeUser] = useRemoveUserMutation();
+  const [removeUserAPI] = useRemoveUserMutation();
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
   const dispatch = useDispatch();
@@ -32,7 +32,7 @@ const UsersTableRow = ({ user, setPage }: Props) => {
     <TableRow>
       <TableCell style={{ width: 16, maxWidth: 16 }}>{user.id}</TableCell>
       <TableCell style={{ width: 190, maxWidth: 190 }}>{user.name}</TableCell>
-      <TableCell style={{ width: 120, maxWidth: 120 }}>
+      <TableCell style={{ width: 140, maxWidth: 140 }}>
         {user.username}
       </TableCell>
       <TableCell style={{ width: 120, maxWidth: 120 }}>
@@ -107,8 +107,8 @@ const UsersTableRow = ({ user, setPage }: Props) => {
                 color="error"
                 onClick={() => {
                   setPage(0);
-                  dispatch(deleteUser({ userId: user.id }));
-                  removeUser({ id: user.id });
+                  dispatch(removeUser({ userId: user.id }));
+                  removeUserAPI({ id: user.id });
                 }}
               >
                 Delete

@@ -1,14 +1,14 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { UserInterface } from "types/placeholderApiTypes";
 import { useForm } from "react-hook-form";
-import { useCreateUserMutation } from "services/placeholderApi";
+import { useAddUserMutation } from "services/placeholderApi";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser, updateLastId } from "features/users/usersSlice";
 import { RootState } from "app/store";
 import { Link, useNavigate } from "react-router-dom";
 
 const UserFormCreate = () => {
-  const [createUser] = useCreateUserMutation();
+  const [addUserAPI] = useAddUserMutation();
   const disptach = useDispatch();
   const navigate = useNavigate();
   const { lastId } = useSelector((store: RootState) => store.users);
@@ -21,14 +21,14 @@ const UserFormCreate = () => {
 
   function handleSubmitUserCreate(user: UserInterface) {
     const newLastId = lastId + 1;
+
     disptach(updateLastId({ newLastId: newLastId }));
     user.id = newLastId;
-
-    createUser({
+    addUserAPI({
       data: user,
     });
-
     disptach(addUser({ user: user }));
+
     navigate("/");
   }
 
@@ -65,7 +65,7 @@ const UserFormCreate = () => {
           id="email"
           label="Email*"
           variant="filled"
-          //   type={"email"}
+          type={"email"}
           {...register("email", { required: true })}
           error={errors.email && true}
           helperText={errors.email && "This field is required."}

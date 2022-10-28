@@ -13,17 +13,17 @@ export const placeholderApi = createApi({
     usersList: builder.query({
       query: () => `/data`,
     }),
+    addUser: builder.mutation({
+      query: ({ data }) => ({
+        url: `data`,
+        method: "POST",
+        body: data,
+      }),
+    }),
     updateUser: builder.mutation({
       query: ({ id, data }) => ({
         url: `data/${id}`,
         method: "PATCH",
-        body: data,
-      }),
-    }),
-    createUser: builder.mutation({
-      query: ({ data }) => ({
-        url: `data`,
-        method: "POST",
         body: data,
       }),
     }),
@@ -40,6 +40,6 @@ export const {
   useGetUserQuery,
   useUsersListQuery,
   useUpdateUserMutation,
-  useCreateUserMutation,
+  useAddUserMutation,
   useRemoveUserMutation,
 } = placeholderApi;

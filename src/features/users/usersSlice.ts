@@ -23,7 +23,7 @@ const usersSlice = createSlice({
 
       state.usersList.push(user);
     },
-    editUser: (state, { payload }) => {
+    updateUser: (state, { payload }) => {
       const { user } = payload;
       const userIndex = state.usersList.findIndex(
         (oldUser) => oldUser.id == user.id
@@ -31,7 +31,7 @@ const usersSlice = createSlice({
 
       state.usersList[userIndex] = user;
     },
-    deleteUser: (state, { payload }) => {
+    removeUser: (state, { payload }) => {
       const { userId } = payload;
       const filteredUsers = state.usersList.filter(
         (user) => user.id !== userId
@@ -39,18 +39,24 @@ const usersSlice = createSlice({
 
       state.usersList = filteredUsers;
     },
-    sortUsers: (state) => {
+    sortUsers: (state, { payload }) => {
+      const property: "name" | "username" = payload.property;
+
       switch (state.sortMode) {
         case 0:
           state.sortMode = 1;
           state.usersList = state.usersList.sort((a, b) => {
-            return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
+            return a[property]!.toLowerCase() > b[property]!.toLowerCase()
+              ? 1
+              : -1;
           });
           break;
         case 1:
           state.sortMode = 2;
           state.usersList = state.usersList.sort((a, b) => {
-            return a.name.toLowerCase() < b.name.toLowerCase() ? 1 : -1;
+            return a[property]!.toLowerCase() < b[property]!.toLowerCase()
+              ? 1
+              : -1;
           });
           break;
         case 2:
@@ -78,7 +84,7 @@ const usersSlice = createSlice({
   },
 });
 
-export const { addUser, editUser, deleteUser, sortUsers, updateLastId } =
+export const { addUser, updateUser, removeUser, sortUsers, updateLastId } =
   usersSlice.actions;
 
 export default usersSlice.reducer;

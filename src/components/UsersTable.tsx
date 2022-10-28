@@ -24,7 +24,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "app/store";
 import { sortUsers } from "features/users/usersSlice";
 
-const UsersList = () => {
+const UsersTable = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(15);
   const { usersList } = useSelector((store: RootState) => store.users);
@@ -73,21 +73,21 @@ const UsersList = () => {
           <TableHead>
             <TableRow>
               <TableCell>Id</TableCell>
+              <TableCell>Name</TableCell>
               <TableCell>
                 <Box sx={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                  Name
-                  <Tooltip title="Disable | Name A-Z | Name Z-A">
+                  Username
+                  <Tooltip title="Disable | A-Z | Z-A">
                     <SortByAlpha
                       sx={{ cursor: "pointer" }}
                       fontSize="small"
                       onClick={() => {
-                        dispatch(sortUsers());
+                        dispatch(sortUsers({ property: "username" }));
                       }}
                     />
                   </Tooltip>
                 </Box>
               </TableCell>
-              <TableCell>Username</TableCell>
               <TableCell>City</TableCell>
               <TableCell>Email</TableCell>
               <TableCell></TableCell>
@@ -148,4 +148,4 @@ const UsersList = () => {
   );
 };
 
-export default UsersList;
+export default UsersTable;

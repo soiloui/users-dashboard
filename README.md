@@ -1,6 +1,6 @@
 # Users Dashboard
 
-- [Live project](https://github.com/soiloui/users-dashboard)
+- [Live project](https://soiloui.github.io/users-dashboard/#/)
 
 ### Built With
 
@@ -16,7 +16,7 @@ To clone and run this application, you'll need [Git](https://git-scm.com) and [N
 
 ```bash
 # Clone this repository
-$ git clone https://github.com/soiloui/button-component
+$ git clone https://github.com/soiloui/users-dashboard
 
 # Install dependencies
 $ npm install

@@ -4,7 +4,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useUpdateUserMutation } from "services/placeholderApi";
 import { useDispatch, useSelector } from "react-redux";
-import { editUser } from "features/users/usersSlice";
+import { updateUser } from "features/users/usersSlice";
 import { RootState } from "app/store";
 
 interface Params {
@@ -13,7 +13,7 @@ interface Params {
 
 const UserFormEdit = () => {
   const { userId } = useParams<keyof Params>() as Params;
-  const [updateUser] = useUpdateUserMutation();
+  const [updateUserAPI] = useUpdateUserMutation();
   const disptach = useDispatch();
   const navigate = useNavigate();
   const { usersList } = useSelector((store: RootState) => store.users);
@@ -30,12 +30,12 @@ const UserFormEdit = () => {
   function handleSubmitUserEdit(data: UserInterface) {
     const upadtedUser = { ...user, ...data };
 
-    updateUser({
+    updateUserAPI({
       id: userId,
       data: upadtedUser,
     });
+    disptach(updateUser({ user: upadtedUser }));
 
-    disptach(editUser({ user: upadtedUser }));
     navigate("/");
   }
 
@@ -81,7 +81,7 @@ const UserFormEdit = () => {
             id="email"
             label="Email*"
             variant="filled"
-            //   type={"email"}
+            type={"email"}
             defaultValue={user.email}
             {...register("email", { required: true })}
             error={errors.email && true}
